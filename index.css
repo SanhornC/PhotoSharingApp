@@ -1,0 +1,108 @@
+*{
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    box-sizing: border-box;
+}
+
+#gender {
+    background-color: rgba(0, 0, 0, 0);
+    display: block;
+    width: 350px;
+    height: 40px;
+    margin: 20px;
+    border: none;
+    font-size: 20px;
+    border-bottom: 1px solid black;
+}
+
+
+body{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+    background: url(river.jpeg);
+    background-size: cover;
+}
+
+form{
+    margin-top: 50px;
+    text-align: center;
+}
+
+input{
+    display: block;
+    width: 350px;
+    height: 40px;
+    margin: 20px;
+    border: none; 
+    outline: none;
+    font-size: 20px;
+    border-bottom: 1px solid black;
+    background: transparent;
+    color: black;
+}
+
+button{
+    width: 350px;
+    height: 40px;
+    font-size: 20px;
+    background-color: rgb(238, 222, 222);
+    border: none;
+    color: black;
+
+}
+
+form h1{
+    margin-bottom: 30px;
+}
+
+::placeholder{
+    color: black;
+}
+
+li, a, button{
+    font-family: "Montserrat", sans-serif;
+    font-weight: 500;
+    font-size: 20px;
+    color: whitesmoke;
+    text-decoration: none;
+}
+
+header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px 10%;
+}
+
+.nav_links{
+    list-style: none;
+}
+
+.nav_links li{
+    display: inline-block;
+    padding: 0px 20px;
+}
+
+.nav_links li a{
+    transition: all 0.3s ease 0s;
+}
+
+.nav_links li a:hover{
+    color: pink;
+}
+
+button{
+    padding: 9px 25px;
+    background-color:black;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease 0s;
+}
+
+button:hover{
+    color: pink;
+}
