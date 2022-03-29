@@ -22,12 +22,11 @@
     $pwd = $_POST['pwd'];
     $usr = addslashes($usr);
 
-    try {
-      $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-      // set the PDO error mode to exception
-      $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-      $sql = "SELECT * FROM `User_Info` WHERE username LIKE ?";
+    // mysql://bda0fa85881ff8:c2f5db74@us-cdbr-east-05.cleardb.net/heroku_fd62410c1b90914?reconnect=true
+    require("connect_DB.php");
+
+    $sql = "SELECT * FROM `User_Info` WHERE username LIKE ?";
 
       
 
@@ -71,12 +70,6 @@
     
         header("refresh:3;url=./mypage.php");
       }
-
-    } catch(PDOException $e) {
-      echo "Connection failed: " . $e->getMessage();
-      echo "<br>Try again!";
-      echo "<br><a href ='./newLogIn.html'>Log In Page</a>";
-    }
 
     ?>
     

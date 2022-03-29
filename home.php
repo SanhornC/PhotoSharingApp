@@ -33,37 +33,19 @@
 
                     date_default_timezone_set("Asia/Taipei"); 
 
-                    $servername = "localhost";
-                    $username = "root";
-                    $password = "csh00515";
-                    $dbname = "photoSharingApp";
-                    $timestamp = date('Y-m-d H:i:s');
+                    require("connect_DB.php");
                     $currentUserID = $_SESSION["userid"];
-                    //echo $currentUserID;
+                    $sql = "SELECT * FROM `User_Info` WHERE user_id LIKE $currentUserID";
+                    $result = $conn->query($sql);
 
-                    try {
-                        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-                        // set the PDO error mode to exception
-                        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-                        $sql = "SELECT * FROM `User_Info` WHERE user_id LIKE $currentUserID";
-                        $result = $conn->query($sql);
-
-                        while($row = $result->fetch()){
-                            $_SESSION['profilepic'] = $row['profile_pic'];
-                        
-                            $img = $_SESSION['profilepic'];
-                            
-                           
-                            echo '<img src="'.$img.'">';
-                        }
-
-                        //echo $img;
-
-                    } catch(PDOException $e) {
-                        echo "Connection failed: " . $e->getMessage();
-                    }
+                    while($row = $result->fetch()){
+                        $_SESSION['profilepic'] = $row['profile_pic'];
                     
+                        $img = $_SESSION['profilepic'];
+                        
+                       
+                        echo '<img src="'.$img.'">';
+                    }
 
                     $sql = null;
                     $conn = null;
@@ -86,30 +68,18 @@
                 $_SESSION['unlikeIIDD'] = $_GET['unlikeID'];
 
             if ($_SESSION['viewingPostID'] == NULL && $_SESSION['unlikeIIDD'] == NULL){
-                try{
-                    $conn100 = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-                    $conn100->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                
+                $sql100 = "SELECT * From `Post_likes` WHERE user_ID = ?";
 
+                $stmt100 = $conn->prepare($sql100);
+                $stmt100->bindParam(1,$currentUserID);
+                $stmt100->execute();
+
+
+                while($row100 = $stmt100->fetch()){
                     
-
-                    $sql100 = "SELECT * From `Post_likes` WHERE user_ID = ?";
-
-                    $stmt100 = $conn100->prepare($sql100);
-                    $stmt100->bindParam(1,$currentUserID);
-                    $stmt100->execute();
-
-
-                    while($row100 = $stmt100->fetch()){
-                        
-                        $_SESSION[$row100['post_ID']] = 111;
-                    
-                    }
-
-                   
-
-                }
-                catch(PDOException $e) {
-                    echo "Connection failed: " . $e->getMessage();
+                    $_SESSION[$row100['post_ID']] = 111;
+                
                 }
             }
 
