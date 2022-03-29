@@ -35,34 +35,18 @@
 
                     date_default_timezone_set("Asia/Taipei"); 
 
-                    $servername = "localhost";
-                    $username = "root";
-                    $password = "csh00515";
-                    $dbname = "photoSharingApp";
-                    $timestamp = date('Y-m-d H:i:s');
+                    require("connect_DB.php");
                     $currentUserID = $_SESSION["userid"];
+                    $sql = "SELECT * FROM `User_Info` WHERE user_id LIKE $currentUserID";
+                    $result = $conn->query($sql);
+
+                    while($row = $result->fetch()){
+                        $_SESSION['profilepic'] = $row['profile_pic'];
                     
-                    try {
-                        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-                        // set the PDO error mode to exception
-                        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-                        $sql = "SELECT * FROM `User_Info` WHERE user_id LIKE $currentUserID";
-                        $result = $conn->query($sql);
-
-                        while($row = $result->fetch()){
-                            $_SESSION['profilepic'] = $row['profile_pic'];
+                        $img = $_SESSION['profilepic'];
                         
-                            $img = $_SESSION['profilepic'];
-                            
-                           
-                            echo '<img src="'.$img.'">';
-                        }
-
                         
-
-                    } catch(PDOException $e) {
-                        echo "Connection failed: " . $e->getMessage();
+                        echo '<img src="'.$img.'">';
                     }
                     
                 ?>
@@ -86,42 +70,23 @@
 
             date_default_timezone_set("Asia/Taipei"); 
 
-            $servername = "localhost";
-            $username = "root";
-            $password = "csh00515";
-            $dbname = "photoSharingApp";
-            $timestamp = date('Y-m-d H:i:s');
+            require("connect_DB.php");
 
             $userid = $_SESSION['userid'];
             $usernameaa = $_SESSION['username'];
+            $sql = "SELECT * FROM User_Posts WHERE user_id = $userid ORDER BY post_time DESC";
+            $result = $conn->query($sql);
 
-            
-
-
-            try {
-                $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-                // set the PDO error mode to exception
-                $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-                $sql = "SELECT * FROM User_Posts WHERE user_id = $userid ORDER BY post_time DESC";
-                $result = $conn->query($sql);
-
-                while($row = $result->fetch()){
-            
-                    $img = $row['post_1'];
-                    $description = $row['description'];
-                    $time = $row['post_time'];
-                    echo '<div class="card">
-                            <img src="'.$img.'" style=" width: 100%;margin-top:10px; margin-left: auto; margin-right: auto;"> 
-                            <p class="message">'.'<span style="color: Blue">Description: </span>'.$description.'</p> <br>
-                            <p class="timestramp"><span style="color: Blue">Time: </span>'.$time.'</p>
-                        </div>';
-                }
-
-            } catch(PDOException $e) {
-                echo "Connection failed: " . $e->getMessage();
-                echo "<br>Try again!";
-                echo "<br><a href ='./add.html'>Message Board</a>";
+            while($row = $result->fetch()){
+        
+                $img = $row['post_1'];
+                $description = $row['description'];
+                $time = $row['post_time'];
+                echo '<div class="card">
+                        <img src="'.$img.'" style=" width: 100%;margin-top:10px; margin-left: auto; margin-right: auto;"> 
+                        <p class="message">'.'<span style="color: Blue">Description: </span>'.$description.'</p> <br>
+                        <p class="timestramp"><span style="color: Blue">Time: </span>'.$time.'</p>
+                    </div>';
             }
             
             ?>
