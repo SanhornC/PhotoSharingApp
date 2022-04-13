@@ -35,32 +35,20 @@
    
 
 
+    require("connect_DB.php");
 
-
-    try {
-        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $pass);
-        // set the PDO error mode to exception
-        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+   
+    $sql = "INSERT INTO `User_Info`(`username`, `email`, `gender`, `password`) VALUES ('$usr', '$email', '$gender','$hashedpwd')";
+    $conn->exec($sql);
     
-    
-        $sql = "INSERT INTO `User_Info`(`username`, `email`, `gender`, `password`) VALUES ('$usr', '$email', '$gender','$hashedpwd')";
-        $conn->exec($sql);
-        
-        // ------------------------------------------
-        session_start();
-        $_SESSION['username'] = $usr;
-        $_SESSION['email'] = $email;
-        $_SESSION['gender'] = $gender;
-        $_SESSION['password'] = $hashedpwd;
+    // ------------------------------------------
+    session_start();
+    $_SESSION['username'] = $usr;
+    $_SESSION['email'] = $email;
+    $_SESSION['gender'] = $gender;
+    $_SESSION['password'] = $hashedpwd;
 
-        header("refresh:3;url=./newLogIn.html");
-       
-        
-    } catch(PDOException $e) {
-        echo "Connection failed: " . $e->getMessage();
-        echo "<br>Try again!";
-        echo "<br><a href ='./newSignUp.html'>Sign Up Again</a>";
-    }
+    header("refresh:3;url=./newLogIn.html");
     ?>
     
 </body>
