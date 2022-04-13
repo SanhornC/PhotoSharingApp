@@ -63,9 +63,9 @@
         <div class="main-content">
         <?php
             
-
-                $_SESSION['viewingPostID'] = $_GET['id'];
-                $_SESSION['unlikeIIDD'] = $_GET['unlikeID'];
+            require("connect_DB.php");
+            $_SESSION['viewingPostID'] = $_GET['id'];
+            $_SESSION['unlikeIIDD'] = $_GET['unlikeID'];
 
             if ($_SESSION['viewingPostID'] == NULL && $_SESSION['unlikeIIDD'] == NULL){
                 
@@ -88,162 +88,132 @@
 
 
                 if (isset($_SESSION['unlikeIIDD'])){
-                    try{
-                        $conn88 = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-                        $conn88->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                    //require("connect_DB.php");
+                    
 
-                        $sql15 = "DELETE FROM `Post_likes` WHERE post_ID = ? and user_ID = ?";
-                        $stmt15 = $conn88->prepare($sql15);
-                        $stmt15->bindParam(1,$_SESSION['unlikeIIDD']);
-                        $stmt15->bindParam(2,$currentUserID);
-                        $stmt15->execute();
+                    $sql15 = "DELETE FROM `Post_likes` WHERE post_ID = ? and user_ID = ?";
+                    $stmt15 = $conn->prepare($sql15);
+                    $stmt15->bindParam(1,$_SESSION['unlikeIIDD']);
+                    $stmt15->bindParam(2,$currentUserID);
+                    $stmt15->execute();
 
-                        $sql9 = "SELECT * From `Post_likes` WHERE user_ID = ?";
+                    $sql9 = "SELECT * From `Post_likes` WHERE user_ID = ?";
 
-                        $stmt9 = $conn88->prepare($sql9);
-                        $stmt9->bindParam(1,$currentUserID);
-                       
-                        $stmt9->execute();
+                    $stmt9 = $conn->prepare($sql9);
+                    $stmt9->bindParam(1,$currentUserID);
+                    
+                    $stmt9->execute();
 
-                       
+                    
 
 
-                        while($row9 = $stmt9->fetch()){
-                            
-                            $_SESSION[$row9['post_ID']] = 111;
+                    while($row9 = $stmt9->fetch()){
                         
-                        }
-
-                        
-
-                    }
-                    catch(PDOException $e) {
-                        echo "Connection failed: " . $e->getMessage();
+                        $_SESSION[$row9['post_ID']] = 111;
+                    
                     }
                 }
 
                 if (isset($_SESSION['viewingPostID'])){
                     $viewpost = $_SESSION['viewingPostID'];
-                    try{
-                        $conn33 = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-                        $conn33->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                    //require("connect_DB.php");
+                    $sql5 = "INSERT INTO `Post_likes`(`post_ID`,`user_ID`) VALUES ('$viewpost','$currentUserID')";
+                    $stmt5 = $conn->prepare($sql5);
+                    $stmt5->execute();
 
-                        $sql5 = "INSERT INTO `Post_likes`(`post_ID`,`user_ID`) VALUES ('$viewpost','$currentUserID')";
-                        $stmt5 = $conn33->prepare($sql5);
-                        $stmt5->execute();
+                    $sql4 = "SELECT * From `Post_likes` WHERE user_ID = ?";
 
-                        $sql4 = "SELECT * From `Post_likes` WHERE user_ID = ?";
+                    $stmt4 = $conn->prepare($sql4);
+                    $stmt4->bindParam(1,$currentUserID);
+                    
+                    $stmt4->execute();
 
-                        $stmt4 = $conn33->prepare($sql4);
-                        $stmt4->bindParam(1,$currentUserID);
+                    
+
+                    while($row4 = $stmt4->fetch()){
                         
-                        $stmt4->execute();
-
-                       
-
-                        while($row4 = $stmt4->fetch()){
-                            
-                            $_SESSION[$row4['post_ID']] = 111;
-                        
-                        }
-
-                       
-
-                    }
-                    catch(PDOException $e) {
-                        echo "Connection failed: " . $e->getMessage();
+                        $_SESSION[$row4['post_ID']] = 111;
+                    
                     }
                 }
             }  
-             try {
 
-
-                $conn2 = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-                // set the PDO error mode to exception
-                $conn2->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-                // //$sql2 = "SELECT * FROM Followers LEFT JOIN User_Posts ON Followers.follower_ID = User_Posts.user_ID RIGHT JOIN User_Info ON Followers.follower_ID = User_Info.user_ID WHERE Followers.user_ID = ? ORDER BY post_time DESC";
-                // ​
-
-                $sql3 = "SELECT * FROM Followers JOIN User_Posts ON Followers.follower_ID = User_Posts.user_ID LEFT JOIN User_Info ON Followers.follower_ID = User_Info.user_ID WHERE Followers.user_ID = ? ORDER BY post_time DESC";
+            //require("connect_DB.php");
+            $sql3 = "SELECT * FROM Followers JOIN User_Posts ON Followers.follower_ID = User_Posts.user_ID LEFT JOIN User_Info ON Followers.follower_ID = User_Info.user_ID WHERE Followers.user_ID = ? ORDER BY post_time DESC";
            
                 
-                
-                $stmt3 = $conn2->prepare($sql3);
-                $stmt3->bindParam(1,$currentUserID);
-                $stmt3->execute();
+            
+            $stmt3 = $conn->prepare($sql3);
+            $stmt3->bindParam(1,$currentUserID);
+            $stmt3->execute();
 
-                while($rowww = $stmt3->fetch()){
-                    $name = $rowww['username'];
-                    $img = $rowww['post_1'];
-                    $description = $rowww['description'];
-                    $time = $rowww['post_time'];
-                    $currentPost = $rowww['post_ID'];
-                    $commentterm = "comment";
-                    echo '<div class="card">
-                            <p>'.'<span style="color: Blue">User: </span>'.$name.'</p> <br>
-                            <img src="'.$img.'" style=" width: 100%;margin-top:10px; margin-left: auto; margin-right: auto;"> 
-                            <p class="message">'.'<span style="color: Blue">Description: </span>'.$description.'</p> <br>
-                            <p class="timestramp"><span style="color: Blue">Time: </span>'.$time.'</p>
-                        </div>';
+            while($rowww = $stmt3->fetch()){
+                $name = $rowww['username'];
+                $img = $rowww['post_1'];
+                $description = $rowww['description'];
+                $time = $rowww['post_time'];
+                $currentPost = $rowww['post_ID'];
+                $commentterm = "comment";
+                echo '<div class="card">
+                        <p>'.'<span style="color: Blue">User: </span>'.$name.'</p> <br>
+                        <img src="'.$img.'" style=" width: 100%;margin-top:10px; margin-left: auto; margin-right: auto;"> 
+                        <p class="message">'.'<span style="color: Blue">Description: </span>'.$description.'</p> <br>
+                        <p class="timestramp"><span style="color: Blue">Time: </span>'.$time.'</p>
+                    </div>';
 
-                    $sql19 = "SELECT * FROM Comments WHERE post_ID = $currentPost";
-                    $result19 = $conn2->query($sql19);
-                    $cnt = 0;
-                    while($row19 = $result19->fetch()){
-                        $cnt++;
-                    }
-                    if ($cnt > 1){
-                        $commentterm = "comments";
-                    }
-                    
-                   
-                    if($_SESSION[$rowww['post_ID']] == 111){
-                        echo '
-                            <div class="card">
-                                <a href="./home.php?unlikeID='.$rowww["post_ID"].'">Unlike</a>
-                                <br><Br>
-                                <div class="nav-right">
-                                    <div class="search-box">
-                                        <img src="./commenticon.png">
-                                        <form action="./comment.php?id='.$currentPost.'" method="POST">
-                                            <input type="text" name="addcomment" placeholder="Add Comment ">
-                                        </form>
-                                    </div>
-                                </div>
-                                <a href="./viewAllComments.php?id='.$currentPost.'">'.$cnt.' '.$commentterm.'</a>
-                            </div>
-                        ';
-                      
-                    }
-                    if($_SESSION[$rowww['post_ID']] != 111){
-                        echo '
-                            <div class="card">
-                                <a href="./home.php?id='.$rowww["post_ID"].'">Like</a>
-                                <br><Br>
-                                <div class="nav-right">
-                                    <div class="search-box">
-                                        <img src="./commenticon.png">
-                                        <form action="./comment.php?id='.$currentPost.'" method="POST">
-                                            <input type="text" name="addcomment" placeholder="Add Comment">
-                                        </form>
-                                    </div>
-                                </div>
-                                <a href="./viewAllComments.php?id='.$currentPost.'">'.$cnt.' '.$commentterm.'</a>
-                                
-                            </div>
-                        ';
-                        
-                    }
+                $sql19 = "SELECT * FROM Comments WHERE post_ID = $currentPost";
+                $result19 = $conn->query($sql19);
+                $cnt = 0;
+                while($row19 = $result19->fetch()){
+                    $cnt++;
                 }
-
-             
+                if ($cnt > 1){
+                    $commentterm = "comments";
+                }
                 
-
-
-            } catch(PDOException $e) {
-                echo "Connection failed: " . $e->getMessage();
+                
+                if($_SESSION[$rowww['post_ID']] == 111){
+                    echo '
+                        <div class="card">
+                            <a href="./home.php?unlikeID='.$rowww["post_ID"].'">Unlike</a>
+                            <br><Br>
+                            <div class="nav-right">
+                                <div class="search-box">
+                                    <img src="./commenticon.png">
+                                    <form action="./comment.php?id='.$currentPost.'" method="POST">
+                                        <input type="text" name="addcomment" placeholder="Add Comment ">
+                                    </form>
+                                </div>
+                            </div>
+                            <a href="./viewAllComments.php?id='.$currentPost.'">'.$cnt.' '.$commentterm.'</a>
+                        </div>
+                    ';
+                    
+                }
+                if($_SESSION[$rowww['post_ID']] != 111){
+                    echo '
+                        <div class="card">
+                            <a href="./home.php?id='.$rowww["post_ID"].'">Like</a>
+                            <br><Br>
+                            <div class="nav-right">
+                                <div class="search-box">
+                                    <img src="./commenticon.png">
+                                    <form action="./comment.php?id='.$currentPost.'" method="POST">
+                                        <input type="text" name="addcomment" placeholder="Add Comment">
+                                    </form>
+                                </div>
+                            </div>
+                            <a href="./viewAllComments.php?id='.$currentPost.'">'.$cnt.' '.$commentterm.'</a>
+                            
+                        </div>
+                    ';
+                    
+                }
             }
+
+            
+            
+
 
             
         ?>

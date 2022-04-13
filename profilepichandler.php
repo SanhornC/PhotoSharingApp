@@ -35,30 +35,19 @@
 
         
         $imgnew = addslashes($img);
-        
+        require("connect_DB.php");
         //echo $imgnew;
-        try {
-            $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-            // set the PDO error mode to exception
-            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                
-            
-            $sql = "UPDATE `User_Info` SET `profile_pic` = '".$imgnew."' WHERE user_ID = $currentUserID";
-            $conn->exec($sql);
+        $sql = "UPDATE `User_Info` SET `profile_pic` = '".$imgnew."' WHERE user_ID = $currentUserID";
+        $conn->exec($sql);
 
-            echo "Please Wait, Redirecting....";
-            
-            
-            // ------------------------------------------
-            $sql = NULL;
-            $conn = NULL;
-            
-            header("refresh:3;url=./uploadProfilePic.php");
-           
-            
-        } catch(PDOException $e) {
-            echo "Connection failed: " . $e->getMessage();
-        }
+        echo "Please Wait, Redirecting....";
+        
+        
+        // ------------------------------------------
+        $sql = NULL;
+        $conn = NULL;
+        
+        header("refresh:3;url=./uploadProfilePic.php");
     ?>
 </body>
 </html>

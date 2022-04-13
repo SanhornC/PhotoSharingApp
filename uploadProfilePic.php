@@ -39,13 +39,21 @@
                     $timestamp = date('Y-m-d H:i:s');
                     $currentUserID = $_SESSION["userid"];
                     //echo $currentUserID;
+                    require("connect_DB.php");
+                    // try {
+                    //     $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+                    //     // set the PDO error mode to exception
+                    //     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-                    try {
-                        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-                        // set the PDO error mode to exception
-                        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                        
 
-                        $sql = "SELECT * FROM `User_Info` WHERE user_id LIKE $currentUserID";
+                    //     //echo $img;
+
+                    // } catch(PDOException $e) {
+                    //     echo "Connection failed: " . $e->getMessage();
+                    // }
+
+                    $sql = "SELECT * FROM `User_Info` WHERE user_id LIKE $currentUserID";
                         $result = $conn->query($sql);
 
                         while($row = $result->fetch()){
@@ -56,12 +64,6 @@
                            
                             echo '<img src="'.$img.'">';
                         }
-
-                        //echo $img;
-
-                    } catch(PDOException $e) {
-                        echo "Connection failed: " . $e->getMessage();
-                    }
                     
                 ?>
             </div>

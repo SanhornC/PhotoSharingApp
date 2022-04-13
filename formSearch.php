@@ -33,35 +33,19 @@
 
                     date_default_timezone_set("Asia/Taipei"); 
 
-                    $servername = "localhost";
-                    $username = "root";
-                    $password = "csh00515";
-                    $dbname = "photoSharingApp";
-                    $timestamp = date('Y-m-d H:i:s');
+                    require("connect_DB.php");
                     $currentUserID = $_SESSION["userid"];
+                    $sql = "SELECT * FROM `User_Info` WHERE user_id LIKE $currentUserID";
+                    $result = $conn->query($sql);
+
+                    while($row = $result->fetch()){
+                        $_SESSION['profilepic'] = $row['profile_pic'];
                     
-
-                    try {
-                        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-                       
-                        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-                        $sql = "SELECT * FROM `User_Info` WHERE user_id LIKE $currentUserID";
-                        $result = $conn->query($sql);
-
-                        while($row = $result->fetch()){
-                            $_SESSION['profilepic'] = $row['profile_pic'];
+                        $img = $_SESSION['profilepic'];
                         
-                            $img = $_SESSION['profilepic'];
-                            
-                           
-                            echo '<img src="'.$img.'">';
-                        }
-
-                    } catch(PDOException $e) {
-                        echo "Connection failed: " . $e->getMessage();
+                        
+                        echo '<img src="'.$img.'">';
                     }
-                    
                 ?>
             </div>
         </div>
@@ -76,56 +60,39 @@
         
         date_default_timezone_set("Asia/Taipei"); 
 
-        $servername = "localhost";
-        $username = "root";
-        $password = "csh00515";
-        $dbname = "photoSharingApp";
-        $timestamp = date('Y-m-d H:i:s');
+        require("connect_DB.php");
+        $sql = "SELECT * FROM User_Posts LEFT JOIN User_Info ON User_Posts.user_ID = User_Info.user_ID WHERE username Like ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(1,$searchUsername);
+        $stmt->execute();
         
-        try {
-            $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-            // set the PDO error mode to exception
-            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                
+        $existed = "";
+        while($row = $stmt->fetch())
+        {
             
-            $sql = "SELECT * FROM User_Posts LEFT JOIN User_Info ON User_Posts.user_ID = User_Info.user_ID WHERE username Like ?";
-            $stmt = $conn->prepare($sql);
-            $stmt->bindParam(1,$searchUsername);
-            $stmt->execute();
-            
-            $existed = "";
-            while($row = $stmt->fetch())
-            {
-                
-                if ($existed != $row["username"]){
-                    $profileimg = $row['profile_pic'];
-                    $_SESSION["viewingID"] = $row["user_ID"]; 
-                    echo '
-                    <div class="card">
-                        <div class="nav2-user-icon online">
-                            <img src="'.$profileimg.'">
-                        </div>
-                        <p><span>User: </span>'.$row["username"].'</p>
-                        <a href="./clickButton.php?id='.$row["username"].'">View Account</a>
+            if ($existed != $row["username"]){
+                $profileimg = $row['profile_pic'];
+                $_SESSION["viewingID"] = $row["user_ID"]; 
+                echo '
+                <div class="card">
+                    <div class="nav2-user-icon online">
+                        <img src="'.$profileimg.'">
                     </div>
-                    '; 
-                }
-                $existed = $row["username"];
-                
-             }
+                    <p><span>User: </span>'.$row["username"].'</p>
+                    <a href="./clickButton.php?id='.$row["username"].'">View Account</a>
+                </div>
+                '; 
+            }
+            $existed = $row["username"];
             
-            
-            // ------------------------------------------
-            $sql = NULL;
-            $conn = NULL;
-            
-           
-            
-        } catch(PDOException $e) {
-            echo "Connection failed: " . $e->getMessage();
-            echo "<br>Try again!";
-            echo "<br><a href ='./upload.php'>Try Again</a>";
         }
+        
+        
+        // ------------------------------------------
+        $sql = NULL;
+        $conn = NULL;
+        
+    
     ?>
 </body>
 </html>

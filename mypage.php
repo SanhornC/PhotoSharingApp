@@ -89,7 +89,7 @@
                     </div>';
             }
             
-            ?>
+        ?>
 
         </div>
         <div class="right-sidebar">

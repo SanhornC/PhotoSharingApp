@@ -23,27 +23,15 @@
     $password = "csh00515";
     $dbname = "photoSharingApp";
     $timestamp = date('Y-m-d H:i:s');
-
-    try {
-        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-        // set the PDO error mode to exception
-        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            
-        
-        $sql = "DELETE FROM `Followers` WHERE `follower_ID` LIKE '$currentUser' AND `user_ID` LIKE '$viewing'";
-        $conn->exec($sql);
-        
-        
-        header("refresh:0.5;url=./followers.php");
-        // ------------------------------------------
-        $sql = NULL;
-        $conn = NULL;
-        
-       
-        
-    } catch(PDOException $e) {
-        echo "Connection failed: " . $e->getMessage();
-    }
+    require("connect_DB.php");
+    $sql = "DELETE FROM `Followers` WHERE `follower_ID` LIKE '$currentUser' AND `user_ID` LIKE '$viewing'";
+    $conn->exec($sql);
+    
+    
+    header("refresh:0.5;url=./followers.php");
+    // ------------------------------------------
+    $sql = NULL;
+    $conn = NULL;
 
     ?>
 </body>

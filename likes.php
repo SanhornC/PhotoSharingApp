@@ -39,30 +39,18 @@
                     $timestamp = date('Y-m-d H:i:s');
                     $currentUserID = $_SESSION["userid"];
                     //echo $currentUserID;
+                    require("connect_DB.php");
+                    $sql = "SELECT * FROM `User_Info` WHERE user_id LIKE $currentUserID";
+                    $result = $conn->query($sql);
 
-                    try {
-                        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-                        // set the PDO error mode to exception
-                        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-                        $sql = "SELECT * FROM `User_Info` WHERE user_id LIKE $currentUserID";
-                        $result = $conn->query($sql);
-
-                        while($row = $result->fetch()){
-                            $_SESSION['profilepic'] = $row['profile_pic'];
-                        
-                            $img = $_SESSION['profilepic'];
-                            
-                           
-                            echo '<img src="'.$img.'">';
-                        }
-
-                        //echo $img;
-
-                    } catch(PDOException $e) {
-                        echo "Connection failed: " . $e->getMessage();
-                    }
+                    while($row = $result->fetch()){
+                        $_SESSION['profilepic'] = $row['profile_pic'];
                     
+                        $img = $_SESSION['profilepic'];
+                        
+                        
+                        echo '<img src="'.$img.'">';
+                    }
 
                     $sql = null;
                     $conn = null;
@@ -80,46 +68,28 @@
         <div class="main-content">
         <?php
             
-            try {
-                $conn2 = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-                // set the PDO error mode to exception
-                $conn2->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-                // //$sql2 = "SELECT * FROM Followers LEFT JOIN User_Posts ON Followers.follower_ID = User_Posts.user_ID RIGHT JOIN User_Info ON Followers.follower_ID = User_Info.user_ID WHERE Followers.user_ID = ? ORDER BY post_time DESC";
-                // ​
-
-                $sql3 = "SELECT * FROM Followers JOIN User_Posts ON Followers.follower_ID = User_Posts.user_ID LEFT JOIN User_Info ON Followers.follower_ID = User_Info.user_ID WHERE Followers.user_ID = ? ORDER BY post_time DESC";
+            require("connect_DB.php");
+            $sql3 = "SELECT * FROM Followers JOIN User_Posts ON Followers.follower_ID = User_Posts.user_ID LEFT JOIN User_Info ON Followers.follower_ID = User_Info.user_ID WHERE Followers.user_ID = ? ORDER BY post_time DESC";
            
                 
-                $stmt3 = $conn2->prepare($sql3);
-                $stmt3->bindParam(1,$currentUserID);
-                $stmt3->execute();
+            $stmt3 = $conn->prepare($sql3);
+            $stmt3->bindParam(1,$currentUserID);
+            $stmt3->execute();
 
-                while($rowww = $stmt3->fetch()){
-                    $name = $rowww['username'];
-                    $img = $rowww['post_1'];
-                    $description = $rowww['description'];
-                    $time = $rowww['post_time'];
-                   
-                    echo '<div class="card">
-                            <p>'.'<span style="color: Blue">User: </span>'.$name.'</p> <br>
-                            <img src="'.$img.'" style=" width: 100%;margin-top:10px; margin-left: auto; margin-right: auto;"> 
-                            <p class="message">'.'<span style="color: Blue">Description: </span>'.$description.'</p> <br>
-                            <p class="timestramp"><span style="color: Blue">Time: </span>'.$time.'</p>
-                            
-                            <a href="./likes.php?id='.$rowww["user_ID"].'" >Like</a>
-                        </div>';
-                }
-
-                //echo $img;
-
-                /*    Likes    */
+            while($rowww = $stmt3->fetch()){
+                $name = $rowww['username'];
+                $img = $rowww['post_1'];
+                $description = $rowww['description'];
+                $time = $rowww['post_time'];
                 
-
-
-
-            } catch(PDOException $e) {
-                echo "Connection failed: " . $e->getMessage();
+                echo '<div class="card">
+                        <p>'.'<span style="color: Blue">User: </span>'.$name.'</p> <br>
+                        <img src="'.$img.'" style=" width: 100%;margin-top:10px; margin-left: auto; margin-right: auto;"> 
+                        <p class="message">'.'<span style="color: Blue">Description: </span>'.$description.'</p> <br>
+                        <p class="timestramp"><span style="color: Blue">Time: </span>'.$time.'</p>
+                        
+                        <a href="./likes.php?id='.$rowww["user_ID"].'" >Like</a>
+                    </div>';
             }
 
             

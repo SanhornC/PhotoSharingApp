@@ -26,30 +26,17 @@
         $currentPostID = $_GET['id'];
         $currentUserID = $_SESSION["userid"];
 
-        
+        require("connect_DB.php");
 
-        try {
-            $conn198 = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-            // set the PDO error mode to exception
-            $conn198->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                
-            
-            $sql198 = "INSERT INTO `Comments`(`user_ID`, `text`, `post_ID`) VALUES ('$currentUserID', '$commentContent', '$currentPostID')";
-            $conn198->exec($sql198);
-            
-            
-            // ------------------------------------------
-            $sql198 = NULL;
-            $conn198 = NULL;
-            
-            header("refresh:0.1;url=./home.php");
+        $sql198 = "INSERT INTO `Comments`(`user_ID`, `text`, `post_ID`) VALUES ('$currentUserID', '$commentContent', '$currentPostID')";
+        $conn->exec($sql198);
         
-            
-        } catch(PDOException $e) {
-            echo "Connection failed: " . $e->getMessage();
-            echo "<br>Try again!";
-            echo "<br><a href ='./upload.php'>Try Again</a>";
-        }
+        
+        // ------------------------------------------
+        $sql198 = NULL;
+        $conn = NULL;
+        
+        header("refresh:0.1;url=./home.php");
     ?>
 </body>
 </html>

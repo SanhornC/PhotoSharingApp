@@ -41,28 +41,17 @@
                     $timestamp = date('Y-m-d H:i:s');
                     $currentUserID = $_SESSION["userid"];
                     //echo $currentUserID;
+                    require("connect_DB.php");
+                    $sql = "SELECT * FROM `User_Info` WHERE user_id LIKE $currentUserID";
+                    $result = $conn->query($sql);
 
-                    try {
-                        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-                        // set the PDO error mode to exception
-                        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-                        $sql = "SELECT * FROM `User_Info` WHERE user_id LIKE $currentUserID";
-                        $result = $conn->query($sql);
-
-                        while($row = $result->fetch()){
-                            $_SESSION['profilepic'] = $row['profile_pic'];
+                    while($row = $result->fetch()){
+                        $_SESSION['profilepic'] = $row['profile_pic'];
+                    
+                        $img = $_SESSION['profilepic'];
                         
-                            $img = $_SESSION['profilepic'];
-                            
-                           
-                            echo '<img src="'.$img.'">';
-                        }
-
-                        //echo $img;
-
-                    } catch(PDOException $e) {
-                        echo "Connection failed: " . $e->getMessage();
+                       
+                        echo '<img src="'.$img.'">';
                     }
                     
                 ?>
@@ -94,37 +83,27 @@
            // $timestamp = date('Y-m-d H:i:s');
 
             
-            try {
-                $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-                // set the PDO error mode to exception
-                $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                $sql = "SELECT * FROM User_Info Right JOIN Followers ON User_Info.user_ID = Followers.follower_ID WHERE Followers.user_ID LIKE ?";
-                $stmt = $conn->prepare($sql);
-                $stmt->bindParam(1,$currentUserID);
-                $stmt->execute();
-                //echo "success";
-                
-                while($row = $stmt->fetch()){
+            $sql22 = "SELECT * FROM User_Info Right JOIN Followers ON User_Info.user_ID = Followers.follower_ID WHERE Followers.user_ID LIKE ?";
+            $stmt = $conn->prepare($sql22);
+            $stmt->bindParam(1,$currentUserID);
+            $stmt->execute();
+            //echo "success";
             
-                    $Usern = $row["username"];
-                    $profileimg = $row["profile_pic"];
-                    //$_SESSION["viewingID"] = $row["follower_ID"];
-                    //echo $_SESSION["viewingID"].'<br>'.$currentUserID;
-                    echo '
-                    <div class="card">
-                    <div class="nav2-user-icon online">
-                    <img src="'.$profileimg.'">
-                    </div>
-                    <p><span>User: </span>'.$Usern.'</p>
-                    <a href="./unfollow3.php?id='.$row["follower_ID"].'">Remove</a>
-                    </div>
-                    ';
-                }
-                
-
-            } catch(PDOException $e) {
-                echo "Connection failed: " . $e->getMessage();
-                echo "<br>Try again!";
+            while($row = $stmt->fetch()){
+        
+                $Usern = $row["username"];
+                $profileimg = $row["profile_pic"];
+                //$_SESSION["viewingID"] = $row["follower_ID"];
+                //echo $_SESSION["viewingID"].'<br>'.$currentUserID;
+                echo '
+                <div class="card">
+                <div class="nav2-user-icon online">
+                <img src="'.$profileimg.'">
+                </div>
+                <p><span>User: </span>'.$Usern.'</p>
+                <a href="./unfollow3.php?id='.$row["follower_ID"].'">Remove</a>
+                </div>
+                ';
             }
             
             ?>

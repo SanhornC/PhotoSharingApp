@@ -24,28 +24,20 @@
         $editContent = addslashes($editContentO);
         $currentPost = $_SESSION['currentPost'];
         //echo $currentCommentID;
-       
-        try {
-            $conn0129 = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-           
-            $conn0129->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $sql0129 = "UPDATE Comments SET text='$editContent' WHERE comment_ID = ?";
+        require("connect_DB.php");
+        $sql0129 = "UPDATE Comments SET text='$editContent' WHERE comment_ID = ?";
 
-            
-            $stmt0129 = $conn0129->prepare($sql0129);
-            $stmt0129->bindParam(1,$currentCommentID);
-            $stmt0129->execute();
+        
+        $stmt0129 = $conn0129->prepare($sql0129);
+        $stmt0129->bindParam(1,$currentCommentID);
+        $stmt0129->execute();
 
 
-            echo "Redirecting.....";
-            header("refresh:0.5;url=./viewAllComments.php?id=$currentPost");
-            // ------------------------------------------
-            $sql211137 = NULL;
-            $conn211137 = NULL;
-
-        } catch(PDOException $e) {
-            echo "Connection failed: " . $e->getMessage();
-        }
+        echo "Redirecting.....";
+        header("refresh:0.5;url=./viewAllComments.php?id=$currentPost");
+        // ------------------------------------------
+        $sql211137 = NULL;
+        $conn211137 = NULL;
 
 
     ?>
